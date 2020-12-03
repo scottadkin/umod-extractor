@@ -8,17 +8,61 @@ class UModExtractor{
         this.file = file;
 
         this.buffer = fs.readFileSync(file);
+        this.logoLine = null;
+        this.startIndex = 0;
+
         this.setupLines = [];
+
+        this.files = [];
+   
+        this.createSetupLines();
+
+        if(this.logoLine !== null){
+
+            // + 2 for newline
+            this.startIndex = this.buffer.indexOf(this.logoLine) + this.logoLine.length + 2; 
+
+        }
 
         this.createSetup();
 
-        console.log(this.setupLines);
+        this.createFiles();
         
     }
 
     createSetup(){
 
-        this.createSetupLines();
+        
+
+        //File=(Src=System\TIMMYVB.u,Size=1839442)
+        const fileReg = /^file=\(src=(.+),size=(\d+)\)$/i;
+
+        let result = 0;
+
+        let s = 0;
+        let offset = 0;
+
+        for(let i = 0; i < this.setupLines.length; i++){
+
+            s = this.setupLines[i];
+
+            if(fileReg.test(s)){
+
+                result = fileReg.exec(s);
+
+                this.files.push(
+                    {
+                        "src": result[1],
+                        "size": parseInt(result[2]),
+                        "offset": offset
+                    }
+                );
+
+                offset += parseInt(result[2])
+            }
+        }
+
+       // console.log(this.files);
     }
 
     createSetupLines(){
@@ -33,7 +77,7 @@ class UModExtractor{
         //console.log(lines);
 
         const blockReg = /^\[(.+?)\]$/i;
-        const keyValueReg = /.+?=.+?/i;
+        const keyValueReg = /(.+?)=.+?/i;
 
         //the second [setup] is the last block we need
         let currentSetupBlock = 0;
@@ -45,7 +89,6 @@ class UModExtractor{
             if(blockReg.test(lines[i])){
 
                 if(currentSetupBlock >= 2){
-                    console.log(`Got all setup data we needed.`);
                     break;
                 }
 
@@ -59,11 +102,33 @@ class UModExtractor{
 
             }else if(keyValueReg.test(lines[i])){
                 this.setupLines.push(lines[i]);
+
+                result = keyValueReg.exec(lines[i]);
+
+                if(result[1] === 'Logo'){
+                    this.logoLine = lines[i];
+                }
             }
-   
+        }
+    }
+
+    createFiles(){
+
+
+        let f = 0;
+
+        let currentData = 0;
+
+        for(let i = 0; i < this.files.length; i++){
+
+            f = this.files[i];
+
+            currentData = this.buffer.slice(f.offset + this.startIndex, f.offset + f.size + this.startIndex);
+            fs.writeFileSync(f.src, currentData);
+
         }
     }
 }
 
 
-const test = new UModExtractor('Timmy Version 2.umod');
+const test = new UModExtractor('Butters Version 2.umod');
