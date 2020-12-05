@@ -1,0 +1,29 @@
+{
+  "name": "umode-extractor",
+  "version": "1.0.0",
+  "description": "A simple tool unpack Unreal Tournament umod files.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scottadkin/umod-extractor.git"
+  },
+  "keywords": [
+    "umod",
+    "extractor",
+    "ut",
+    "ut99",
+    "unreal",
+    "tournament",
+    "unpack"
+  ],
+  "author": "Scott Adkin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scottadkin/umod-extractor/issues"
+  },
+  "homepage": "https://github.com/scottadkin/umod-extractor#readme",
+  "dependencies": {}
+}
