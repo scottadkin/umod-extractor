@@ -69,7 +69,7 @@ function run(){
             }
 
         }else{
-            throw new error('[ERROR]: No file was specified.');
+            throw new Error('[ERROR]: No file was specified.');
         }
 
     }catch(err){
