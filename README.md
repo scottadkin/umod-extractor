@@ -8,7 +8,7 @@
 To directly unpack to the correct folders:
 - Place contents of archive into your Unreal Tournament main directory. e.g C:/UnrealTournament/
 
-You can also place the package anywhere else if you don't want to directly place into Unreal Tournament folders.
+You can also place the package anywhere else if you don't want to directly place the extracted files into their respective folders.
 
 # How To Run
 - Open command prompt in the installed directory.
