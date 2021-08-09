@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 
 
@@ -120,26 +121,21 @@ class UModExtractor{
 
     createFiles(){
 
-
-        let f = 0;
-
-        let currentData = 0;
-
-        const dirReg = /^(.+)(\/|\\).+\..+$/;
-        let dirResult = 0;
-
         try{
 
             for(let i = 0; i < this.files.length; i++){
 
-                f = this.files[i];
+                const f = this.files[i];
 
-                dirResult = dirReg.exec(f.src);
+                // Convert src to format used by host system
+                //const src = f.src.split(/[/\\]/).join(path.sep);
+                const src = path.join(...f.src.split(/[/\\]/));
+                const dir = path.dirname(src);
 
-                fs.mkdirSync(dirResult[1], {recursive: true});
-                currentData = this.buffer.slice(f.offset + this.startIndex, f.offset + f.size + this.startIndex);
-                console.log(`[Note]: Creating file ${dirResult[1]}/${f.src}`);
-                fs.writeFileSync(f.src, currentData);
+                fs.mkdirSync(dir, {recursive: true});
+                const currentData = this.buffer.slice(f.offset + this.startIndex, f.offset + f.size + this.startIndex);
+                console.log(`[Note]: Creating file ${src}`);
+                fs.writeFileSync(src, currentData);
 
             }
 
